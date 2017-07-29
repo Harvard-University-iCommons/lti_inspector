@@ -25,7 +25,7 @@ SECRET_KEY = 'bu1s4+e_h!$!rsa(in18--y1uxupg(&2-=e$+0+5kj%z053p#a'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['lti-inspector.herokuapp.com',]
+ALLOWED_HOSTS = ['lti-inspector.herokuapp.com', 'localhost']
 
 
 # Application definition
