@@ -21,7 +21,7 @@
       <tr>
         <td><b>{{ k }}</b></td>
         <td>
-          {% if "$" in v %}
+          {% if "$" in v or v == '' %}
             <span class="muted">n/a</muted>
           {% else %}
             {% if 'user_image' in k %}
