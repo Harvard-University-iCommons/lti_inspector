@@ -1,0 +1,47 @@
+{% load inspector_extras %}
+
+<!DOCTYPE html>
+<html class="lato-font-loaded">
+  <head>
+    <meta charset="utf-8">
+    <title>LTI Inspector</title>
+    <link rel="stylesheet" href="{{ request.POST.custom_canvas_css_common }}"/>
+  </head>
+  <body>
+    <h1>LTI Inspector</h1>
+    <table class="ic-Table ic-Table--hover-row ic-Table--condensed">
+      <thead>
+        <tr>
+          <th>Variable name</th>
+          <th>Value</th>
+        </tr>
+      <tbody>
+    {% for k,v in request.POST.iteritems %}
+      <tr>
+        <td><b>{{ k }}</b></td>
+        <td>
+          {% if "$" in v %}
+            <span class="muted">n/a</muted>
+          {% else %}
+            {% if 'user_image' in k %}
+              <img src="{{ v }}"/>
+            {% elif 'role' in k and ',' in v %}
+              <ul>
+              {% with v|split as roles %}
+                {% for role in roles %}
+                  <li>{{ role }}</li>
+                {% endfor %}
+              {% endwith %}
+            </ul>
+            {% else %}
+              {{ v }}
+            {% endif %}
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+
+  </body>
+</html>

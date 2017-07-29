@@ -13,10 +13,11 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
-from django.contrib import admin
+from django.conf.urls import url
+
+from .views import tool_config, lti_launch
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^inspector/', include('inspector.urls')),
+    url(r'^tool_config$', tool_config, name='tool_config'),
+    url(r'^lti_launch$', lti_launch, name='lti_launch'),
 ]
