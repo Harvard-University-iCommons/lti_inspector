@@ -7,6 +7,7 @@ from lti import ToolConfig
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.clickjacking import xframe_options_exempt
+from collections import OrderedDict
 
 # Create your views here.
 
@@ -146,6 +147,7 @@ def tool_config(request):
 @xframe_options_exempt
 @csrf_exempt
 def lti_launch(request):
-    context = {}
-
-    return render(request, 'inspector/lti_launch.html', context)
+    launch_params = OrderedDict()
+    for k in sorted(request.POST.dict().keys()):
+        launch_params[k] = request.POST[k]
+    return render(request, 'inspector/lti_launch.html', {'launch_params': launch_params})
