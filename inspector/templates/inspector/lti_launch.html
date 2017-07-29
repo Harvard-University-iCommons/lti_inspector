@@ -17,7 +17,7 @@
         </tr>
       </thead>
       <tbody>
-    {% for k,v in request.POST.iteritems %}
+    {% for k,v in request.POST.items %}
       <tr>
         <td><b>{{ k }}</b></td>
         <td>
