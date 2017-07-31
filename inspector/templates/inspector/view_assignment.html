@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html class="lato-font-loaded">
+  <head>
+    <meta charset="utf-8">
+    <title>View Assignment</title>
+    <link rel="stylesheet" href="{{ request.POST.custom_canvas_css_common }}"/>
+  </head>
+  <body>
+    <h1>External Tool Assignment "{{ assignment_id }}"</h1>
+
+    <p>This is where the tool can display some kind of custom assignment for {{ assignment_id }}.</p>
+    <p>The external tool can grade the assessment and send the score back to the LMS</p>
+
+    {% include "inspector/launch_params_table.html" %}
+
+  </body>
+</html>

@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.clickjacking import xframe_options_exempt
 from collections import OrderedDict
+import lorem
 
 # Create your views here.
 
@@ -105,6 +106,23 @@ VARIABLE_EXPANSIONS = [
     'Canvas.file.usageRights.copyrightText',
 ]
 
+CONTENT_ITEM_TEMPLATE = '{{  \
+    "@context": "http://purl.imsglobal.org/ctx/lti/v1/ContentItem",  \
+    "@graph": [  \
+        {{  \
+            "@type": "LtiLinkItem",  \
+            "@id": "{}",  \
+            "url": "{}",  \
+            "title": "{}",  \
+            "text": "{}",  \
+            "mediaType": "application/vnd.ims.lti.v1.ltilink",  \
+            "placementAdvice": {{  \
+                "presentationDocumentTarget": "frame"  \
+            }}  \
+        }}  \
+    ]  \
+}}'
+
 
 def tool_config(request):
 
@@ -112,7 +130,7 @@ def tool_config(request):
     app_title = 'LTI Inspector'
     app_description = 'A simple LTI App that echoes the launch parameters'
     launch_view_name = 'lti_launch'
-    launch_url = request.build_absolute_uri(reverse(launch_view_name))
+    launch_url = request.build_absolute_uri(reverse(launch_view_name, args=('',)))
 
     # maybe you've got some extensions
     extensions = {
@@ -121,12 +139,88 @@ def tool_config(request):
             'privacy_level': 'public',
             'custom_fields': {},
             'course_navigation': {
-                'url': launch_url,
-                'text': app_title,
+                'url': '{}/course_navigation'.format(launch_url),
+                'text': '{} - course_navigation'.format(app_title),
+                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
                 'visibility': 'public',
                 'default': 'enabled',
-                'enabled': 'false',
-            }
+                'enabled': 'true',
+            },
+            'account_navigation': {
+                'url': '{}/account_navigation'.format(launch_url),
+                'text': '{} - account_navigation'.format(app_title),
+                'visibility': 'public',
+                'default': 'enabled',
+                'enabled': 'true',
+            },
+            'user_navigation': {
+                'url': '{}/user_navigation'.format(launch_url),
+                'text': '{} - user_navigation'.format(app_title),
+                'visibility': 'public',
+                'default': 'enabled',
+                'enabled': 'true',
+            },
+            'global_navigation': {
+                'url': '{}/global_navigation'.format(launch_url),
+                'text': '{} - global_navigation'.format(app_title),
+                'visibility': 'public',
+                'default': 'enabled',
+                'enabled': 'true',
+            },
+            'course_home_sub_navigation': {
+                'url': '{}/course_home_sub_navigation'.format(launch_url),
+                'text': '{} - course_home_sub_navigation'.format(app_title),
+                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'canvas_icon_class': 'icon-lti',
+            },
+            'course_settings_sub_navigation': {
+                'url': '{}/course_settings_sub_navigation'.format(launch_url),
+                'text': '{} - course_settings_sub_navigation'.format(app_title),
+                'canvas_icon_class': 'icon-standards',
+            },
+            'homework_submission': {
+                'url': '{}/homework_submission'.format(launch_url),
+                'text': '{} - homework_submission'.format(app_title),
+                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'message_type': 'ContentItemSelectionRequest',
+                'selection_width': '800',
+                'selection_height': '600',
+                'enabled': 'true',
+            },
+            'assignment_selection': {
+                'url': '{}/assignment_selection'.format(launch_url),
+                'text': '{} - assignment_selection'.format(app_title),
+                'message_type': 'ContentItemSelectionRequest',
+                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'selection_width': '800',
+                'selection_height': '600',
+                'enabled': 'true',
+            },
+            'editor_button': {
+                'url': '{}/editor_button'.format(launch_url),
+                'text': '{} - editor_button'.format(app_title),
+                'message_type': 'ContentItemSelectionRequest',
+                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'selection_width': '800',
+                'selection_height': '600',
+                'enabled': 'true',
+            },
+            'link_selection': {
+                'url': '{}/link_selection'.format(launch_url),
+                'text': '{} - link_selection'.format(app_title),
+                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'message_type': 'ContentItemSelectionRequest',
+                'selection_width': '800',
+                'selection_height': '600',
+                'enabled': 'true',
+            },
+            'tool_configuration': {
+                'url': '{}/tool_configuration'.format(launch_url),
+                'text': '{} - tool_configuration'.format(app_title),
+                'selection_width': '800',
+                'selection_height': '600',
+                'enabled': 'true',
+            },
         }
     }
 
@@ -146,8 +240,82 @@ def tool_config(request):
 
 @xframe_options_exempt
 @csrf_exempt
-def lti_launch(request):
+def lti_launch(request, placement="generic"):
+
     launch_params = OrderedDict()
     for k in sorted(request.POST.dict().keys()):
         launch_params[k] = request.POST[k]
-    return render(request, 'inspector/lti_launch.html', {'launch_params': launch_params})
+
+    if launch_params['lti_message_type'] == 'ContentItemSelectionRequest':
+        # we need to let the user choose a piece of content that will be returned
+        # as a content-item
+        if placement == 'assignment_selection':
+            return render(request, 'inspector/assignment_selection.html', {'launch_params': launch_params})
+        elif placement == 'homework_submission':
+            return render(request, 'inspector/homework_submission.html', {'launch_params': launch_params})
+
+    else:
+        return render(request, 'inspector/lti_launch.html', {'launch_params': launch_params, 'placement': placement})
+
+
+@xframe_options_exempt
+def return_assignment_selection(request):
+    context = {}
+    assignment_id = request.POST['assignment_id']
+    assignment_url = request.build_absolute_uri(reverse('view_assignment', args=(assignment_id,)))
+    title = 'Title for {}'.format(assignment_id)
+    description = 'Description for {}'.format(assignment_id)
+    context['content_item_return_url'] = request.POST['content_item_return_url']
+    context['lti_version'] = 'LTI-1p0'
+    context['lti_message_type'] = 'ContentItemSelection'
+    context['data'] = request.POST['data']
+    context['content_items'] = CONTENT_ITEM_TEMPLATE.format(
+        assignment_url,
+        assignment_url,
+        title,
+        description,
+    )
+
+    return render(request, 'inspector/return_assignment_selection.html', context)
+
+
+@xframe_options_exempt
+def return_homework_submission(request, submission_id):
+    context = {}
+    submission_id = request.POST['submission_id']
+    submission_url = request.build_absolute_uri(reverse('view_submission', args=(submission_id,)))
+    title = 'Title for {}'.format(submission_id)
+    description = 'Description for {}'.format(submission_id)
+    context['content_item_return_url'] = request.POST['content_item_return_url']
+    context['lti_version'] = 'LTI-1p0'
+    context['lti_message_type'] = 'ContentItemSelection'
+    context['data'] = request.POST['data']
+    context['content_items'] = CONTENT_ITEM_TEMPLATE.format(
+        submission_url,
+        submission_url,
+        title,
+        description,
+    )
+
+    return render(request, 'inspector/return_homework_submission.html', context)
+
+
+@csrf_exempt
+@xframe_options_exempt
+def view_assignment(request, assignment_id):
+    launch_params = OrderedDict()
+    for k in sorted(request.POST.dict().keys()):
+        launch_params[k] = request.POST[k]
+    return render(request, 'inspector/view_assignment.html', {'launch_params': launch_params, 'assignment_id': assignment_id})
+
+
+@csrf_exempt
+@xframe_options_exempt
+def view_homework_submission(request, submission_id):
+    launch_params = OrderedDict()
+    for k in sorted(request.POST.dict().keys()):
+        launch_params[k] = request.POST[k]
+
+    content = lorem.text()
+
+    return render(request, 'inspector/view_submission.html', {'launch_params': launch_params, 'submission_id': submission_id, 'content': content})

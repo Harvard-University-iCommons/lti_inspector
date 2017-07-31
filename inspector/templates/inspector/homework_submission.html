@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html class="lato-font-loaded">
+  <head>
+    <meta charset="utf-8">
+    <title>Homework Submission</title>
+    <link rel="stylesheet" href="{{ request.POST.custom_canvas_css_common }}"/>
+  </head>
+  <body>
+    <div style="margin: 2em;">
+    <h3>Choose a document to submit for this assignment:</h3>
+    <form method="post" action="{% url 'return_homework_submission' %}">
+      {% csrf_token %}
+      <input type="hidden" name="data" value="{{ launch_params.data }}"/>
+      <input type="hidden" name="content_item_return_url" value="{{ launch_params.content_item_return_url }}"/>
+      <select name="submission_id">
+        <option value="submission1">Document 1</option>
+        <option value="submission2">Document 2</option>
+        <option value="submission3">Document 3</option>
+      </select>
+      <input type="submit"/>
+    </form>
+
+    {% include "inspector/launch_params_table.html" %}
+  </div>
+  </body>
+</html>

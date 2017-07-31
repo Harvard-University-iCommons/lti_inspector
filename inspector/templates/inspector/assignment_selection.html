@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html class="lato-font-loaded">
+  <head>
+    <meta charset="utf-8">
+    <title>Assignment Selection</title>
+    <link rel="stylesheet" href="{{ request.POST.custom_canvas_css_common }}"/>
+  </head>
+  <body>
+    <div style="margin: 2em;">
+    <h3>Choose a problem set to assign:</h3>
+    <form method="post" action="{% url 'return_assignment_selection' %}">
+      {% csrf_token %}
+      <input type="hidden" name="data" value="{{ launch_params.data }}"/>
+      <input type="hidden" name="content_item_return_url" value="{{ launch_params.content_item_return_url }}"/>
+      <select name="assignment_id">
+        <option value="ps1">Problem Set 1</option>
+        <option value="ps2">Problem Set 2</option>
+        <option value="ps3">Problem Set 3</option>
+      </select>
+      <input type="submit"/>
+    </form>
+
+    {% include "inspector/launch_params_table.html" %}
+  </div>
+  </body>
+</html>

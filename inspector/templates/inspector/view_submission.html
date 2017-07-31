@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html class="lato-font-loaded">
+  <head>
+    <meta charset="utf-8">
+    <title>View Assignment</title>
+    <link rel="stylesheet" href="{{ request.POST.custom_canvas_css_common }}"/>
+  </head>
+  <body>
+    <h1>Assignment Submission "{{ submission_id }}"</h1>
+
+    <pre>
+    {{ content }}
+    </pre>
+    
+    {% include "inspector/launch_params_table.html" %}
+
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <form method="post" action="{{ content_item_return_url }}" id="return_assignment_selection">
+      <input type="hidden" name="data" value="{{ data }}"/>
+      <input type="hidden" name="lti_message_type" value="{{ lti_message_type }}"/>
+      <input type="hidden" name="lti_version" value="{{ lti_version }}"/>
+      <input type="hidden" name="content_items" value="{{ content_items }}"/>
+    </form>
+
+    <script>
+      document.getElementById('return_assignment_selection').submit();
+    </script>
+  </body>
+</html>

@@ -11,3 +11,4 @@ requests==2.18.2
 requests-oauthlib==0.8.0
 urllib3==1.22
 django-sslserver==0.19
+lorem
