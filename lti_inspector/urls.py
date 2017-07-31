@@ -23,9 +23,9 @@ urlpatterns = [
     url(r'^$', views.tool_config, name='tool_config'),
     url(r'^launch[/]{0,1}(?P<placement>[a-z_]*)$', views.lti_launch, name='lti_launch'),
     url(r'^return_assignment_selection$', views.return_assignment_selection, name='return_assignment_selection'),
-    url(r'^return_homework_submission/(?P<submission_id>[a-zA-Z0-9]+)$', views.return_homework_submission, name='return_homework_submission'),
+    url(r'^return_homework_submission$', views.return_homework_submission, name='return_homework_submission'),
     url(r'^view_assignment/(?P<assignment_id>[a-zA-Z0-9]+)$', views.view_assignment, name='view_assignment'),
-    url(r'^view_homework_submission/(?P<submission_id>[a-zA-Z0-9]+)$', views.view_homework_submission, name='view_homework_submission'),
+    url(r'^view_homework_submission/(?P<submission_id>[a-zA-Z0-9]+)$', views.view_homework_submission, name='view_submission'),
 
 
 ]

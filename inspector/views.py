@@ -280,7 +280,7 @@ def return_assignment_selection(request):
 
 
 @xframe_options_exempt
-def return_homework_submission(request, submission_id):
+def return_homework_submission(request):
     context = {}
     submission_id = request.POST['submission_id']
     submission_url = request.build_absolute_uri(reverse('view_submission', args=(submission_id,)))
