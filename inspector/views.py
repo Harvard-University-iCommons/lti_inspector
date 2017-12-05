@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+from collections import OrderedDict
+
+import lorem
+from django.contrib.staticfiles.templatetags.staticfiles import static
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
-from lti import ToolConfig
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.clickjacking import xframe_options_exempt
-from collections import OrderedDict
-import lorem
+from django.views.decorators.csrf import csrf_exempt
+from lti import ToolConfig
 
 # Create your views here.
 
@@ -132,6 +134,8 @@ def tool_config(request):
     launch_view_name = 'lti_launch'
     launch_url = request.build_absolute_uri(reverse(launch_view_name, args=('',)))
 
+    icon_url = request.build_absolute_uri(static('harvard-shield-30-2x.png'))
+
     # maybe you've got some extensions
     extensions = {
         'canvas.instructure.com': {
@@ -141,7 +145,7 @@ def tool_config(request):
             'course_navigation': {
                 'url': '{}/course_navigation'.format(launch_url),
                 'text': '{} - course_navigation'.format(app_title),
-                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'icon_url': icon_url,
                 'visibility': 'public',
                 'default': 'enabled',
                 'enabled': 'true',
@@ -170,7 +174,7 @@ def tool_config(request):
             'course_home_sub_navigation': {
                 'url': '{}/course_home_sub_navigation'.format(launch_url),
                 'text': '{} - course_home_sub_navigation'.format(app_title),
-                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'icon_url': icon_url,
                 'canvas_icon_class': 'icon-lti',
             },
             'course_settings_sub_navigation': {
@@ -181,7 +185,7 @@ def tool_config(request):
             'homework_submission': {
                 'url': '{}/homework_submission'.format(launch_url),
                 'text': '{} - homework_submission'.format(app_title),
-                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'icon_url': icon_url,
                 'message_type': 'ContentItemSelectionRequest',
                 'selection_width': '800',
                 'selection_height': '600',
@@ -191,7 +195,7 @@ def tool_config(request):
                 'url': '{}/assignment_selection'.format(launch_url),
                 'text': '{} - assignment_selection'.format(app_title),
                 'message_type': 'ContentItemSelectionRequest',
-                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'icon_url': icon_url,
                 'selection_width': '800',
                 'selection_height': '600',
                 'enabled': 'true',
@@ -200,7 +204,7 @@ def tool_config(request):
                 'url': '{}/editor_button'.format(launch_url),
                 'text': '{} - editor_button'.format(app_title),
                 'message_type': 'ContentItemSelectionRequest',
-                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'icon_url': icon_url,
                 'selection_width': '800',
                 'selection_height': '600',
                 'enabled': 'true',
@@ -208,7 +212,7 @@ def tool_config(request):
             'link_selection': {
                 'url': '{}/link_selection'.format(launch_url),
                 'text': '{} - link_selection'.format(app_title),
-                'icon_url': 'https://localhost:5000/static/harvard-shield-30-2x.png',
+                'icon_url': icon_url,
                 'message_type': 'ContentItemSelectionRequest',
                 'selection_width': '800',
                 'selection_height': '600',
@@ -246,16 +250,22 @@ def lti_launch(request, placement="generic"):
     for k in sorted(request.POST.dict().keys()):
         launch_params[k] = request.POST[k]
 
-    if launch_params['lti_message_type'] == 'ContentItemSelectionRequest':
+    lti_message_type = launch_params.get('lti_message_type')
+
+    common_css = None
+    if launch_params.get('custom_canvas_css_common'):
+        common_css = launch_params.get('custom_canvas_css_common')
+
+    if lti_message_type == 'ContentItemSelectionRequest':
         # we need to let the user choose a piece of content that will be returned
         # as a content-item
         if placement == 'assignment_selection':
-            return render(request, 'inspector/assignment_selection.html', {'launch_params': launch_params})
+            return render(request, 'inspector/assignment_selection.html', {'launch_params': launch_params, 'common_css': common_css})
         elif placement == 'homework_submission':
-            return render(request, 'inspector/homework_submission.html', {'launch_params': launch_params})
+            return render(request, 'inspector/homework_submission.html', {'launch_params': launch_params, 'common_css': common_css})
 
     else:
-        return render(request, 'inspector/lti_launch.html', {'launch_params': launch_params, 'placement': placement})
+        return render(request, 'inspector/lti_launch.html', {'launch_params': launch_params, 'placement': placement, 'common_css': common_css})
 
 
 @xframe_options_exempt

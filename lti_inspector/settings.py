@@ -25,8 +25,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'bu1s4+e_h!$!rsa(in18--y1uxupg(&2-=e$+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 
-ALLOWED_HOSTS = ['lti-inspector.herokuapp.com', 'localhost']
+ALLOWED_HOSTS = ['lti-inspector.herokuapp.com', 'localhost', 'lti-inspector.dev.tlt.harvard.edu']
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 
@@ -38,11 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'inspector',
-    'sslserver',
+    #'sslserver',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -123,3 +125,4 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
