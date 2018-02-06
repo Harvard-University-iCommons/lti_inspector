@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html class="lato-font-loaded">
+  <head>
+    <meta charset="utf-8">
+    <title>Editor Selection</title>
+    {% if common_css %}
+      <link rel="stylesheet" href="{{ common_css }}"/>
+    {% endif %}
+  </head>
+  <body>
+    <div style="margin: 2em;">
+    <h3>Choose a problem set to assign:</h3>
+    <form method="post" action="{% url 'return_editor_button_selection' %}">
+      {% csrf_token %}
+      <input type="hidden" name="data" value="{{ launch_params.data }}"/>
+      <input type="hidden" name="content_item_return_url" value="{{ launch_params.content_item_return_url }}"/>
+      Some extra parameter to be used by the tool: <input type="text" name="extra_param"/>
+      <input type="submit"/>
+    </form>
+
+    {% include "inspector/launch_params_table.html" %}
+  </div>
+  </body>
+</html>

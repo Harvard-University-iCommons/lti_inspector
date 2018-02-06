@@ -11,6 +11,10 @@ from django.urls import reverse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from lti import ToolConfig
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 # Create your views here.
 
@@ -119,7 +123,9 @@ CONTENT_ITEM_TEMPLATE = '{{  \
             "text": "{}",  \
             "mediaType": "application/vnd.ims.lti.v1.ltilink",  \
             "placementAdvice": {{  \
-                "presentationDocumentTarget": "frame"  \
+                "presentationDocumentTarget": "iframe",  \
+                "displayHeight": "600", \
+                "displayWidth": "100%" \
             }}  \
         }}  \
     ]  \
@@ -263,6 +269,9 @@ def lti_launch(request, placement="generic"):
             return render(request, 'inspector/assignment_selection.html', {'launch_params': launch_params, 'common_css': common_css})
         elif placement == 'homework_submission':
             return render(request, 'inspector/homework_submission.html', {'launch_params': launch_params, 'common_css': common_css})
+        elif placement == 'editor_button':
+            logger.debug(launch_params)
+            return render(request, 'inspector/editor_selection.html', {'launch_params': launch_params, 'common_css': common_css})
 
     else:
         return render(request, 'inspector/lti_launch.html', {'launch_params': launch_params, 'placement': placement, 'common_css': common_css})
@@ -287,6 +296,28 @@ def return_assignment_selection(request):
     )
 
     return render(request, 'inspector/return_assignment_selection.html', context)
+
+
+@xframe_options_exempt
+def return_editor_button_selection(request):
+    context = {}
+    placement = 'editor_button'
+    # extra_param = request.POST['extra_param']
+    content_url = request.build_absolute_uri(reverse('lti_launch', args=('',)))
+    title = 'Tool-provided embed content'
+    description = 'This content is provided by an LTI tool.'
+    context['content_item_return_url'] = request.POST['content_item_return_url']
+    context['lti_version'] = 'LTI-1p0'
+    context['lti_message_type'] = 'ContentItemSelection'
+    context['data'] = request.POST['data']
+    context['content_items'] = CONTENT_ITEM_TEMPLATE.format(
+        content_url,
+        content_url,
+        title,
+        description,
+    )
+
+    return render(request, 'inspector/return_editor_button_selection.html', context)
 
 
 @xframe_options_exempt

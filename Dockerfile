@@ -1,4 +1,5 @@
-FROM python:2
+#FROM python:2
+FROM amazonlinux
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
 RUN mkdir /code/logs
