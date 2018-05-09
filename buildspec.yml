@@ -6,18 +6,21 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME
       - echo Image repo name $IMAGE_REPO_NAME
       - echo Image tag $IMAGE_TAG
+      - echo Repository URI $REPOSITORY_URI
   build:
     commands:
       - echo Starting build...
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
       - echo Build complete.
       - echo Pushing the Docker image...
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - printf '[{"name":"lti-inspector-container","imageUri":"%s"}]' $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG > imagedefinitions.json
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - print '[{"name":"lti-inspector-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG
+      - printf '[{"name":"lti-inspector-container","imageUri":"%s"}]' $REPOSITORY_URI > imagedefinitions.json
 artifacts:
     files: imagedefinitions.json
