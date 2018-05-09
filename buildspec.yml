@@ -10,6 +10,8 @@ phases:
       - echo Image repo name $IMAGE_REPO_NAME
       - echo Image tag $IMAGE_TAG
       - echo Repository URI $REPOSITORY_URI
+      - IMAGE_TAG_2=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - echo Image tag 2 $IMAGE_TAG_2
   build:
     commands:
       - echo Starting build...
