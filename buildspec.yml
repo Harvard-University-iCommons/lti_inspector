@@ -20,6 +20,6 @@ phases:
       - echo Build complete.
       - echo Pushing the Docker image...
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '[{"name":"lti-inspector-container","imageUri":"%s"}]' $REPOSITORY_URI > imagedefinitions.json
+      - printf '[{"name":"lti-inspector-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
   files: imagedefinitions.json
