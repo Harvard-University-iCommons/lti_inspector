@@ -224,12 +224,24 @@ def tool_config(request):
                 'selection_height': '600',
                 'enabled': 'true',
             },
+            'resource_selection': {
+                'url': '{}/resource_selection'.format(launch_url),
+                'text': '{} - resource_selection'.format(app_title),
+                'icon_url': icon_url,
+                'selection_width': '800',
+                'selection_height': '600',
+                'enabled': 'true',
+            },
             'tool_configuration': {
                 'url': '{}/tool_configuration'.format(launch_url),
                 'text': '{} - tool_configuration'.format(app_title),
                 'selection_width': '800',
                 'selection_height': '600',
                 'enabled': 'true',
+            },
+            'file_menu': {
+                'url': '{}/file_menu'.format(launch_url),
+                'text': '{} - file_menu'.format(app_title),
             },
         }
     }
