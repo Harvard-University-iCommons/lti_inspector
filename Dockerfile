@@ -1,10 +1,13 @@
 #FROM python:2
-FROM amazonlinux
+#FROM amazonlinux
+FROM alpine
 ENV PYTHONUNBUFFERED 1
 RUN mkdir /code
 RUN mkdir /code/logs
 WORKDIR /code
-RUN yum install python27-pip -y
+# RUN yum install python27-pip -y
+RUN apk update
+RUN apk add build-base python2-dev py2-pip gcc libxml2-dev libxslt-dev
 ADD requirements.txt /code/
 RUN pip install -r requirements.txt
 ADD . /code/
