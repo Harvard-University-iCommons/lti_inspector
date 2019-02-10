@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+import logging
 from collections import OrderedDict
 
 import lorem
+from django.conf import settings
 from django.contrib.staticfiles.templatetags.staticfiles import static
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -11,7 +13,6 @@ from django.urls import reverse
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import csrf_exempt
 from lti import ToolConfig
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -313,7 +314,9 @@ def lti_launch(request, placement="generic"):
             {
                 'launch_params': launch_params, 
                 'placement': placement, 
-                'common_css': common_css
+                'common_css': common_css,
+                'source_version': settings.SOURCE_VERSION,
+                'build_timestamp': settings.BUILD_TIMESTAMP,
             }
         )
 

@@ -10,7 +10,7 @@
     {% endif %}
   </head>
   <body>
-    <h1>LTI Inspector 02/10/2019</h1>
+    <h1>LTI Inspector</h1>
     <h2>Placement: {{ placement }}</h2>
     <table class="ic-Table ic-Table--hover-row ic-Table--condensed">
       <thead>
@@ -46,5 +46,6 @@
     {% endfor %}
     </tbody>
     </table>
+    <p><i>Source version: {{ source_version }} / Build date: {{ build_timestamp }}</i></p>
   </body>
 </html>

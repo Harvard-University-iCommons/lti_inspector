@@ -12,6 +12,14 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+try:
+    from .build_info import source_version, build_timestamp
+    SOURCE_VERSION = source_version
+    BUILD_TIMESTAMP = build_timestamp
+except ImportError:
+    SOURCE_VERSION = 'n/a'
+    BUILD_TIMESTAMP = 'n/a'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,7 +33,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'bu1s4+e_h!$!rsa(in18--y1uxupg(&2-=e$+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 
-ALLOWED_HOSTS = ['lti-inspector.herokuapp.com', 'localhost', 'lti-inspector.dev.tlt.harvard.edu']
+# ALLOWED_HOSTS = ['lti-inspector.herokuapp.com', 'localhost', 'lti-inspector.dev.tlt.harvard.edu']
+ALLOWED_HOSTS = ['*']
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
