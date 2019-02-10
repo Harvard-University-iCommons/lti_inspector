@@ -15,8 +15,8 @@ phases:
       - echo Starting build...
       - echo $(pwd)
       - echo $(ls)
-      - printf "source_version = '%s'" $CODEBUILD_RESOLVED_SOURCE_VERSION > lti_inspector/build_info.py
-      - printf "build_timestamp = '%s'" $(date "+%Y-%m-%d %H:%M:%S") >> lti_inspector/build_info.py
+      - printf "\nsource_version = '%s'\n" $CODEBUILD_RESOLVED_SOURCE_VERSION > lti_inspector/build_info.py
+      - printf "\nbuild_timestamp = '%s'\n" $(date "+%Y-%m-%d-%H:%M:%S") >> lti_inspector/build_info.py
       - echo $(ls)
       - echo $(cat lti_inspector/build_info.py)
       - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
