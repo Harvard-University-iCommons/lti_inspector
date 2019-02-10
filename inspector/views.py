@@ -106,6 +106,8 @@ VARIABLE_EXPANSIONS = [
     'User.id',
     'User.image',
     'User.username',
+    'com.Instructure.membership.roles',
+    'com.instructure.Assignment.anonymous_grading',
     'com.instructure.Assignment.lti.id',
     'com.instructure.Course.groupIds',
     'com.instructure.Editor.contents',
@@ -114,8 +116,10 @@ VARIABLE_EXPANSIONS = [
     'com.instructure.Group.id',
     'com.instructure.Group.name',
     'com.instructure.OriginalityReport.id',
+    'com.instructure.Person.name_sortable',
     'com.instructure.PostMessageToken',
     'com.instructure.Submission.id',
+    'com.instructure.User.allRoles',
     'com.instructure.brandConfigJS.url',
     'com.instructure.brandConfigJSON',
     'com.instructure.brandConfigJSON.url',
@@ -303,7 +307,15 @@ def lti_launch(request, placement="generic"):
             return render(request, 'inspector/editor_selection.html', {'launch_params': launch_params, 'common_css': common_css})
 
     else:
-        return render(request, 'inspector/lti_launch.html', {'launch_params': launch_params, 'placement': placement, 'common_css': common_css})
+        return render(
+            request, 
+            'inspector/lti_launch.html', 
+            {
+                'launch_params': launch_params, 
+                'placement': placement, 
+                'common_css': common_css
+            }
+        )
 
 
 @xframe_options_exempt
@@ -388,4 +400,8 @@ def view_homework_submission(request, submission_id):
 
     content = lorem.text()
 
-    return render(request, 'inspector/view_submission.html', {'launch_params': launch_params, 'submission_id': submission_id, 'content': content})
+    return render(
+        request, 
+        'inspector/view_submission.html', 
+        {'launch_params': launch_params, 'submission_id': submission_id, 'content': content}
+    )
