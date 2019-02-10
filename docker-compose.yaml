@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     build: .
-    command: /bin/bash docker-entrypoint.sh
+    command: /bin/ash docker-entrypoint.sh
     volumes:
       - .:/code
     ports:
