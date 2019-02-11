@@ -309,11 +309,11 @@ def lti_launch(request, placement="generic"):
 
     else:
         return render(
-            request, 
-            'inspector/lti_launch.html', 
+            request,
+            'inspector/lti_launch.html',
             {
-                'launch_params': launch_params, 
-                'placement': placement, 
+                'launch_params': launch_params,
+                'placement': placement,
                 'common_css': common_css,
                 'source_version': settings.SOURCE_VERSION,
                 'build_timestamp': settings.BUILD_TIMESTAMP,
@@ -360,7 +360,7 @@ def return_editor_button_selection(request):
         title,
         description,
     )
-
+    context['placement'] = placement
     return render(request, 'inspector/return_editor_button_selection.html', context)
 
 
@@ -404,7 +404,7 @@ def view_homework_submission(request, submission_id):
     content = lorem.text()
 
     return render(
-        request, 
-        'inspector/view_submission.html', 
+        request,
+        'inspector/view_submission.html',
         {'launch_params': launch_params, 'submission_id': submission_id, 'content': content}
     )
