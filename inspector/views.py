@@ -315,8 +315,7 @@ def lti_launch(request, placement="generic"):
                 'launch_params': launch_params,
                 'placement': placement,
                 'common_css': common_css,
-                'source_version': settings.SOURCE_VERSION,
-                'build_timestamp': settings.BUILD_TIMESTAMP,
+                'build_info': settings.BUILD_INFO,
             }
         )
 
