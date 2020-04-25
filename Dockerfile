@@ -10,4 +10,5 @@ RUN pip install -r requirements.txt
 ADD . /code/
 RUN chmod a+x /code/docker-entrypoint.sh
 RUN apk del build-base gcc
+ENTRYPOINT ["/code/docker-entrypoint.sh"]
 EXPOSE 8000
