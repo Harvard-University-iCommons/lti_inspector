@@ -4,7 +4,7 @@ Django==1.11.23
 gunicorn==19.9.0
 idna==2.5
 lti==0.9.4
-lxml==3.8.0
+lxml==4.6.2
 oauthlib==2.0.2
 pytz==2017.2
 requests==2.21.0
